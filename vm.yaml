@@ -1,0 +1,6 @@
+name: Linux
+disks:
+  - type: raw
+    path: "/path/to/disk"
+  - type: qcow
+    path: "/path/to/disk2"
