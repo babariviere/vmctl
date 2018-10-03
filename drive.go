@@ -1,8 +1,8 @@
 package vmctl
 
 import (
-	"bytes"
 	"errors"
+	"strings"
 )
 
 // DriveType is a list of all disk type supported by qemu
@@ -84,9 +84,9 @@ type Drive struct {
 }
 
 // ToQemu convert struct to command line arguments for qemu
-func (d Drive) ToQemu() (string, error) {
+func (d Drive) ToQemu() ([]string, error) {
 	if len(d.Path) == 0 {
-		return "", errors.New("missing path for disk")
+		return nil, errors.New("missing path for disk")
 	}
 	if len(d.Interface) == 0 {
 		d.Interface = IfVirtio
@@ -98,19 +98,22 @@ func (d Drive) ToQemu() (string, error) {
 		d.Cache = CacheWriteback
 	}
 
-	var buf bytes.Buffer
+	var res []string
+	var buf []string
 
-	buf.WriteString("-drive file=" + d.Path)
+	res = append(res, "-drive")
+	buf = append(buf, "file="+d.Path)
 
 	if len(d.Type) > 0 {
-		buf.WriteString(",format=" + string(d.Type))
+		buf = append(buf, "format="+string(d.Type))
 	}
 	if d.ReadOnly {
-		buf.WriteString(",readonly")
+		buf = append(buf, "readonly")
 	}
-	buf.WriteString(",if=" + string(d.Interface))
-	buf.WriteString(",media=" + string(d.Media))
-	buf.WriteString(",cache=" + string(d.Cache))
+	buf = append(buf, "if="+string(d.Interface))
+	buf = append(buf, "media="+string(d.Media))
+	buf = append(buf, "cache="+string(d.Cache))
 
-	return buf.String(), nil
+	res = append(res, strings.Join(buf, ","))
+	return res, nil
 }

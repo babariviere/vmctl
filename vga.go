@@ -4,9 +4,9 @@ package vmctl
 type VGA string
 
 // ToQemu convert vga to qemu command line parameter
-func (v VGA) ToQemu() (string, error) {
+func (v VGA) ToQemu() ([]string, error) {
 	if len(v) == 0 {
-		return "-vga std", nil
+		v = "std"
 	}
-	return "-vga " + string(v), nil
+	return []string{"-vga", string(v)}, nil
 }

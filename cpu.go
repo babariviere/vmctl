@@ -13,7 +13,7 @@ type CPU struct {
 }
 
 // ToQemu convert CPU to a qemu command line parameter
-func (c CPU) ToQemu() (string, error) {
+func (c CPU) ToQemu() ([]string, error) {
 	if c.Count == 0 {
 		c.Count = 1
 	}
@@ -21,5 +21,5 @@ func (c CPU) ToQemu() (string, error) {
 		c.Arch = "host"
 	}
 
-	return "-smp " + fmt.Sprint(c.Count) + " -cpu " + c.Arch, nil
+	return []string{"-smp", fmt.Sprint(c.Count), "-cpu", c.Arch}, nil
 }

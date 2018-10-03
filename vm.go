@@ -2,7 +2,6 @@ package vmctl
 
 import (
 	"errors"
-	"strings"
 )
 
 // VM represents the spawn parameters used by qemu
@@ -38,7 +37,7 @@ func (e *errBuilder) add(builder QemuBuilder) {
 		e.err = err
 		return
 	}
-	e.buf = append(e.buf, buf)
+	e.buf = append(e.buf, buf...)
 }
 
 func (e *errBuilder) addString(s string) {
@@ -46,15 +45,15 @@ func (e *errBuilder) addString(s string) {
 }
 
 // ToQemu converts VM to a qemu command
-func (v VM) ToQemu() (string, error) {
+func (v VM) ToQemu() ([]string, error) {
 	if len(v.Name) == 0 {
-		return "", errors.New("missing vm name")
+		return nil, errors.New("missing vm name")
 	}
 	if len(v.System) == 0 {
-		return "", errors.New("missing vm system")
+		return nil, errors.New("missing vm system")
 	}
 	if len(v.Drives) == 0 {
-		return "", errors.New("no disk for vm")
+		return nil, errors.New("no disk for vm")
 	}
 
 	var builder errBuilder
@@ -73,5 +72,5 @@ func (v VM) ToQemu() (string, error) {
 		builder.addString("--enable-kvm")
 	}
 
-	return strings.Join(builder.buf, " "), builder.err
+	return builder.buf, builder.err
 }
