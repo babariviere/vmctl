@@ -6,13 +6,13 @@ import (
 	"log"
 	"os"
 
+	"github.com/davecgh/go-spew/spew"
 	"gopkg.in/yaml.v2"
 	"vmctl"
 )
 
 // TODO: commands add, list, remove, info and run/spawn
 func main() {
-	fmt.Println("vmctl tool")
 	if len(os.Args) != 2 {
 		fmt.Println("Usage: vmctl vm.yaml")
 		return
@@ -29,5 +29,11 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	fmt.Printf("%+v\n", vm)
+	spew.Dump(vm)
+
+	cmd, err := vm.ToQemu()
+	if err != nil {
+		log.Fatalln(err)
+	}
+	fmt.Println("Result command:", cmd)
 }

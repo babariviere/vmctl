@@ -45,7 +45,7 @@ func (v VM) ToQemu() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	buf.WriteString(cbuf)
+	buf.WriteString(" " + cbuf)
 
 	return buf.String(), nil
 }

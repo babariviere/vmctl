@@ -1,5 +1,7 @@
 package vmctl
 
+import "fmt"
+
 // TODO: list archs?
 
 // CPU configuration, specify number of cpu allowed to use and it's architecture
@@ -19,5 +21,5 @@ func (c CPU) ToQemu() (string, error) {
 		c.Arch = "host"
 	}
 
-	return "-smp " + string(c.Count) + " -cpu " + c.Arch, nil
+	return "-smp " + fmt.Sprint(c.Count) + " -cpu " + c.Arch, nil
 }
