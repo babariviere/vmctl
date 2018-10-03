@@ -35,14 +35,14 @@ const (
 type DriveInterface string
 
 const (
-	Ide    DriveInterface = "ide"
-	Scsi                  = "scsi"
-	Sd                    = "sd"
-	Mtd                   = "mtd"
-	Floppy                = "floppy"
-	Pflash                = "pflash"
-	Virtio                = "virtio"
-	None                  = "none"
+	IfIde    DriveInterface = "ide"
+	IfScsi                  = "scsi"
+	IfSd                    = "sd"
+	IfMtd                   = "mtd"
+	IfFloppy                = "floppy"
+	IfPflash                = "pflash"
+	IfVirtio                = "virtio"
+	IfNone                  = "none"
 )
 
 // DriveMedia is the media type of the disk
@@ -55,6 +55,24 @@ const (
 	CdRom = "cdrom"
 )
 
+// DriveCache is the cache used by the disk
+type DriveCache string
+
+const (
+	// CacheNone disables cache
+	CacheNone DriveCache = "none"
+	// CacheWriteback enables writeback
+	CacheWriteback = "writeback"
+	// CacheUnsafe enables writeback and no flush
+	CacheUnsafe = "unsafe"
+	// CacheDirectSync enables direct sync
+	CacheDirectSync = "directsync"
+	// CacheWriteThrough disables direct sync
+	CacheWriteThrough = "writethrough"
+)
+
+// TODO: implement unmarshal to check for invalid values
+
 // Drive information to attach and/or create images
 type Drive struct {
 	Type      DriveType      `yaml:"type"`
@@ -62,6 +80,7 @@ type Drive struct {
 	ReadOnly  bool           `yaml:"readonly"`
 	Interface DriveInterface `yaml:"interface"`
 	Media     DriveMedia     `yaml:"media"`
+	Cache     DriveCache     `yaml:"cache"`
 }
 
 // ToQemu convert struct to command line arguments for qemu
@@ -70,10 +89,13 @@ func (d Drive) ToQemu() (string, error) {
 		return "", errors.New("missing path for disk")
 	}
 	if len(d.Interface) == 0 {
-		d.Interface = Virtio
+		d.Interface = IfVirtio
 	}
 	if len(d.Media) == 0 {
 		d.Media = Disk
+	}
+	if len(d.Cache) == 0 {
+		d.Cache = CacheWriteback
 	}
 
 	var buf bytes.Buffer
@@ -88,6 +110,7 @@ func (d Drive) ToQemu() (string, error) {
 	}
 	buf.WriteString(",if=" + string(d.Interface))
 	buf.WriteString(",media=" + string(d.Media))
+	buf.WriteString(",cache=" + string(d.Cache))
 
 	return buf.String(), nil
 }
