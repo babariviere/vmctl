@@ -9,3 +9,15 @@ type CPU struct {
 	// Arch is the target architecture
 	Arch string `yaml:"arch"`
 }
+
+// ToQemu convert CPU to a qemu command line parameter
+func (c CPU) ToQemu() (string, error) {
+	if c.Count == 0 {
+		c.Count = 1
+	}
+	if len(c.Arch) == 0 {
+		c.Arch = "host"
+	}
+
+	return "-smp " + string(c.Count) + " -cpu " + c.Arch, nil
+}
