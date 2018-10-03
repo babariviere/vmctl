@@ -1,4 +1,5 @@
 name: Linux
+system: "x86_64"
 disks:
   - type: raw # default to auto
     path: "/path/to/disk"
