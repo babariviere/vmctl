@@ -1,8 +1,8 @@
 package vmctl
 
 import (
-	"bytes"
 	"errors"
+	"strings"
 )
 
 // VM represents the spawn parameters used by qemu
@@ -15,6 +15,34 @@ type VM struct {
 	Drives []Drive `yaml:"drives"`
 	// CPU configuration
 	CPU CPU `yaml:"cpu"`
+	// Memory used by the vm
+	Memory Memory `yaml:"memory"`
+	// VGA graphics of the vm
+	VGA VGA `yaml:"vga"`
+	// Kvm specify if we enable kvm or not
+	Kvm bool `yaml:"kvm"`
+}
+
+type errBuilder struct {
+	buf []string
+	err error
+}
+
+func (e *errBuilder) add(builder QemuBuilder) {
+	if e.err != nil {
+		return
+	}
+
+	buf, err := builder.ToQemu()
+	if err != nil {
+		e.err = err
+		return
+	}
+	e.buf = append(e.buf, buf)
+}
+
+func (e *errBuilder) addString(s string) {
+	e.buf = append(e.buf, s)
 }
 
 // ToQemu converts VM to a qemu command
@@ -29,23 +57,21 @@ func (v VM) ToQemu() (string, error) {
 		return "", errors.New("no disk for vm")
 	}
 
-	var buf bytes.Buffer
+	var builder errBuilder
 
-	buf.WriteString("qemu-system-" + v.System)
+	builder.addString("qemu-system-" + v.System)
 
 	for i := 0; i < len(v.Drives); i++ {
-		dbuf, err := v.Drives[i].ToQemu()
-		if err != nil {
-			return "", err
-		}
-		buf.WriteString(" " + dbuf)
+		builder.add(v.Drives[i])
 	}
 
-	cbuf, err := v.CPU.ToQemu()
-	if err != nil {
-		return "", err
-	}
-	buf.WriteString(" " + cbuf)
+	builder.add(v.CPU)
+	builder.add(v.Memory)
+	builder.add(v.VGA)
 
-	return buf.String(), nil
+	if v.Kvm {
+		builder.addString("--enable-kvm")
+	}
+
+	return strings.Join(builder.buf, " "), builder.err
 }

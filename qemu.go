@@ -1,6 +1,6 @@
 package vmctl
 
-// Qemu interface to create a full qemu command
-type Qemu interface {
-	ToQemu() string
+// QemuBuilder interface to create a full qemu command
+type QemuBuilder interface {
+	ToQemu() (string, error)
 }
