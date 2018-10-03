@@ -1,6 +1,8 @@
 name: Linux
 disks:
-  - type: raw
+  - type: raw # default to auto
     path: "/path/to/disk"
-  - type: qcow
-    path: "/path/to/disk2"
+    readonly: true # default to false
+cpu:
+  count: 2 # default to 1
+  arch: Haswell # default to host

@@ -12,9 +12,11 @@ const (
 	Vdi            = "vdi"
 	Vhdx           = "vhdx"
 	Vpc            = "vpc"
+	Auto           = "auto"
 )
 
 type Disk struct {
-	Type DiskType `yaml:"type"`
-	Path string   `yaml:"path"`
+	Type     DiskType `yaml:"type"`
+	Path     string   `yaml:"path"`
+	ReadOnly bool     `yaml:"readonly"`
 }

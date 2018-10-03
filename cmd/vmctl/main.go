@@ -23,7 +23,7 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	vm := vmctl.VM{}
+	vm := vmctl.Vm{}
 	err = yaml.Unmarshal(buf, &vm)
 	if err != nil {
 		log.Fatalln(err)
