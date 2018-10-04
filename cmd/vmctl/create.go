@@ -32,6 +32,7 @@ Arguments:
 `
 }
 
+// TODO: allow for resize if file exists
 func (c CreateCommand) Spawn() error {
 	vm, err := OpenVMConfig(c.file)
 	if err != nil {
