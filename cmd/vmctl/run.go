@@ -3,13 +3,10 @@ package main
 import (
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"os/exec"
 
-	"github.com/babariviere/vmctl"
 	"github.com/davecgh/go-spew/spew"
-	"gopkg.in/yaml.v2"
 )
 
 // RunCommand is a struct holding the run subcommand
@@ -38,13 +35,8 @@ Arguments:
 // Spawn subcommand
 func (r RunCommand) Spawn() error {
 	fmt.Println(r.file)
-	buf, err := ioutil.ReadFile(r.file)
-	if err != nil {
-		return err
-	}
 
-	vm := vmctl.VM{}
-	err = yaml.Unmarshal(buf, &vm)
+	vm, err := OpenVMConfig(r.file)
 	if err != nil {
 		return err
 	}
@@ -63,9 +55,5 @@ func (r RunCommand) Spawn() error {
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	fmt.Printf("%+v\n", *cmd)
-	err = cmd.Run()
-	if err != nil {
-		return err
-	}
-	return nil
+	return cmd.Run()
 }

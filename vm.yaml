@@ -1,11 +1,13 @@
 name: Linux
 system: "x86_64"
 drives:
-  - type: raw # default to auto
-    path: "/path/to/disk"
+  - name: OS # optional: usefull for drive creation
+    type: raw # default to auto
+    path: "./example.img"
     readonly: true # default to false
     interface: ide
     media: disk
+    size: 10G # for disk creation
 cpu:
   count: 2 # default to 1
   arch: Haswell # default to host

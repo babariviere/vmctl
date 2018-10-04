@@ -75,12 +75,38 @@ const (
 
 // Drive information to attach and/or create images
 type Drive struct {
+	Name      string         `yaml:"name"`
 	Type      DriveType      `yaml:"type"`
 	Path      string         `yaml:"path"`
 	ReadOnly  bool           `yaml:"readonly"`
 	Interface DriveInterface `yaml:"interface"`
 	Media     DriveMedia     `yaml:"media"`
 	Cache     DriveCache     `yaml:"cache"`
+	Size      string         `yaml:"size"`
+}
+
+// Create return command line to create drive
+func (d Drive) Create() ([]string, error) {
+	if len(d.Size) == 0 {
+		return nil, errors.New("missing disk size")
+	}
+	if len(d.Type) == 0 {
+		return nil, errors.New("missing disk type")
+	}
+	if len(d.Path) == 0 {
+		return nil, errors.New("missing disk path")
+	}
+
+	var res []string
+
+	res = append(res, "qemu-img")
+	res = append(res, "create")
+	res = append(res, "-f")
+	res = append(res, string(d.Type))
+	res = append(res, d.Path)
+	res = append(res, d.Size)
+
+	return res, nil
 }
 
 // ToQemu convert struct to command line arguments for qemu

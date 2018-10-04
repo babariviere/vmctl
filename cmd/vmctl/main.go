@@ -2,21 +2,42 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
 	"os"
+
+	"github.com/babariviere/vmctl"
+	"gopkg.in/yaml.v2"
 )
 
 const usage = `usage: vmctl <command> [arguments]
 
 Commands:
+	create	create disk images with qemu-img
 	run		run a VM in Qemu (alias: spawn)
 `
 
 var commands = map[string]Command{
-	"run": &RunCommand{},
+	"run":    &RunCommand{},
+	"create": &CreateCommand{},
 }
 
 var aliases = map[string]string{
 	"spawn": "run",
+}
+
+func OpenVMConfig(path string) (vmctl.VM, error) {
+	buf, err := ioutil.ReadFile(path)
+	if err != nil {
+		return vmctl.VM{}, err
+	}
+
+	vm := vmctl.VM{}
+	err = yaml.Unmarshal(buf, &vm)
+	if err != nil {
+		return vmctl.VM{}, err
+	}
+
+	return vm, nil
 }
 
 // TODO: commands add, list, remove, info and run/spawn
