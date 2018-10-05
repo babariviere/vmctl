@@ -4,5 +4,5 @@ package main
 type Command interface {
 	Parse([]string) error
 	Usage() string
-	Spawn() error
+	Spawn(*Config) error
 }

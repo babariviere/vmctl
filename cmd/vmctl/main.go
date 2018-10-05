@@ -2,11 +2,7 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
-
-	"github.com/babariviere/vmctl"
-	"gopkg.in/yaml.v2"
 )
 
 const usage = `usage: vmctl <command> [arguments]
@@ -25,21 +21,6 @@ var aliases = map[string]string{
 	"spawn": "run",
 }
 
-func OpenVMConfig(path string) (vmctl.VM, error) {
-	buf, err := ioutil.ReadFile(path)
-	if err != nil {
-		return vmctl.VM{}, err
-	}
-
-	vm := vmctl.VM{}
-	err = yaml.Unmarshal(buf, &vm)
-	if err != nil {
-		return vmctl.VM{}, err
-	}
-
-	return vm, nil
-}
-
 // TODO: commands add, list, remove, info and run/spawn
 func main() {
 	if len(os.Args) < 2 {
@@ -47,6 +28,11 @@ func main() {
 		os.Exit(1)
 	}
 
+	config, err := NewConfig()
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(2)
+	}
 	cmd := os.Args[1]
 	if val, ok := aliases[cmd]; ok {
 		cmd = val
@@ -59,7 +45,7 @@ func main() {
 			os.Exit(1)
 		}
 
-		if err := val.Spawn(); err != nil {
+		if err := val.Spawn(&config); err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}

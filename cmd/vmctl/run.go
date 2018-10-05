@@ -11,7 +11,7 @@ import (
 
 // RunCommand is a struct holding the run subcommand
 type RunCommand struct {
-	file string
+	name string
 }
 
 // Parse arguments for run command
@@ -19,24 +19,23 @@ func (r *RunCommand) Parse(args []string) error {
 	if len(args) != 1 {
 		return errors.New("expected 1 argument")
 	}
-	r.file = args[0]
+	r.name = args[0]
 	return nil
 }
 
 // Usage returns usage of subcommand
 func (r RunCommand) Usage() string {
-	return `usage: vmctl run <file>
+	return `usage: vmctl run <name/file>
 
 Arguments:	
-	file		path to vm's config
+	name		vm name to run
+	file		path to vm config file to run
 `
 }
 
 // Spawn subcommand
-func (r RunCommand) Spawn() error {
-	fmt.Println(r.file)
-
-	vm, err := OpenVMConfig(r.file)
+func (r RunCommand) Spawn(config *Config) error {
+	vm, err := config.GetVMOrRead(r.name)
 	if err != nil {
 		return err
 	}

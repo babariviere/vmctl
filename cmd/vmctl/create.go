@@ -7,34 +7,39 @@ import (
 	"os/exec"
 )
 
+// CreateCommand represents the create subcommand
 type CreateCommand struct {
-	file  string
+	name  string
 	drive string
 }
 
+// Parse command line arguments for the create subcommand
 func (c *CreateCommand) Parse(args []string) error {
 	if len(args) == 0 {
 		return errors.New("missing 1 argument")
 	}
-	c.file = args[0]
+	c.name = args[0]
 	if len(args) > 1 {
 		c.drive = args[1]
 	}
 	return nil
 }
 
+// Usage for the create subcommand
 func (c CreateCommand) Usage() string {
-	return `usage: vmctl create <file> [drive_name]
+	return `usage: vmctl create <name/file> [drive_name]
 
 Arguments:
+	name			name of the vm
 	file			path to vm's config
 	drive_name		name of drive to create, if not specified, a prompt will be displayed
 `
 }
 
+// Spawn launch the create subcommand
 // TODO: allow for resize if file exists
-func (c CreateCommand) Spawn() error {
-	vm, err := OpenVMConfig(c.file)
+func (c CreateCommand) Spawn(config *Config) error {
+	vm, err := config.GetVMOrRead(c.name)
 	if err != nil {
 		return err
 	}

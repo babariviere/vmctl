@@ -1,7 +1,7 @@
 name: Linux
 system: "x86_64"
 drives:
-  - name: OS # optional: usefull for drive creation
+  - name: OS # optional: useful for drive creation
     type: raw # default to auto
     path: "./example.img"
     readonly: true # default to false
@@ -11,5 +11,5 @@ drives:
 cpu:
   count: 2 # default to 1
   arch: Haswell # default to host
-memory: 10GB
+memory: 10G
 vga: std

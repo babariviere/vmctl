@@ -11,19 +11,19 @@ name: Linux # name of your VM
 system: x86_64 # system architecture
 # All of your drivers
 drives:
-  - name: OS # optional: name of the drive (usefull for creation)
+  - name: OS # optional: name of the drive (useful for creation)
     type: qcow2 # default to auto
     path: path/to/image
     readonly: true # if the disk should be readonly
     interface: ide # interface of the disk
     media: disk # or cdrom
-    size: 10G # usefull for disk creation
+    size: 10G # useful for disk creation
 # Cpu configuration
 cpu:
   count: 2
   arch: Haswell
 # Ram configuration
-memory: 10GB
+memory: 10G
 # VGA configuration
 vga: std
 ```
