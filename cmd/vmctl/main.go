@@ -8,9 +8,8 @@ import (
 const usage = `usage: vmctl <command> [arguments]
 
 Commands:
-	create	create disk images with qemu-img
-	run		run a VM in Qemu (alias: spawn)
-`
+    create  create disk images with qemu-img
+    run     run a VM in Qemu (alias: spawn)`
 
 var commands = map[string]Command{
 	"run":    &RunCommand{},

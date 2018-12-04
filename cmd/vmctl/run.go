@@ -29,8 +29,7 @@ func (r RunCommand) Usage() string {
 
 Arguments:	
 	name		vm name to run
-	file		path to vm config file to run
-`
+	file		path to vm config file to run`
 }
 
 // Spawn subcommand

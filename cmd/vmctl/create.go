@@ -32,8 +32,7 @@ func (c CreateCommand) Usage() string {
 Arguments:
 	name			name of the vm
 	file			path to vm's config
-	drive_name		name of drive to create, if not specified, a prompt will be displayed
-`
+	drive_name		name of drive to create, if not specified, a prompt will be displayed`
 }
 
 // Spawn launch the create subcommand
