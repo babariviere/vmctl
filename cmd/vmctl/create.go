@@ -46,6 +46,9 @@ func (c CreateCommand) Spawn(config *Config) error {
 	var cmdStr []string
 
 	if len(c.drive) == 0 {
+		if len(vm.Drives) == 0 {
+			return errors.New("no drive")
+		}
 		fmt.Println("Select drive to create:")
 		for i, drive := range vm.Drives {
 			fmt.Println("[", i+1, "]", "type:", string(drive.Type), "path:", drive.Path)

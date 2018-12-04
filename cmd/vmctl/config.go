@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"os"
 
@@ -40,7 +41,7 @@ func listVMFiles() ([]string, error) {
 	var buf []string
 
 	for _, f := range files {
-		buf = append(buf, f.Name())
+		buf = append(buf, local+"/"+f.Name())
 	}
 	return buf, nil
 }
@@ -56,6 +57,7 @@ func (c *Config) ListVMs() ([]vmctl.VM, error) {
 			c.vms = append(c.vms, cfg)
 		}
 	}
+	fmt.Println(c.vms)
 	return c.vms, nil
 }
 
