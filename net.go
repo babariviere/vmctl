@@ -24,22 +24,20 @@ func (n Net) ToQemu() (args []string, err error) {
 
 // Redirect is a redirection
 type Redirect struct {
-	Protocol string `yaml:"protocol"`
-	Host     uint16 `yaml:"host"`
-	Guest    uint16 `yaml:"guest"`
+	HostIP    string `yaml:"host_ip"`
+	HostPort  uint16 `yaml:"host_port"`
+	GuestIP   string `yaml:"guest_ip"`
+	GuestPort uint16 `yaml:"guest_port"`
 }
 
 // TODO: check protocol
 
 func (r Redirect) ToQemu() ([]string, error) {
-	if r.Protocol == "" {
-		r.Protocol = "tcp"
+	if r.HostPort == 0 {
+		return nil, errors.New("missing host port")
 	}
-	if r.Host == 0 {
-		return nil, errors.New("missing host")
+	if r.GuestPort == 0 {
+		return nil, errors.New("missing guest port")
 	}
-	if r.Guest == 0 {
-		return nil, errors.New("missing guest")
-	}
-	return []string{"-redir", fmt.Sprintf("%s:%d::%d", r.Protocol, r.Host, r.Guest)}, nil
+	return []string{"-net", fmt.Sprintf("user,hostfwd=tcp:%s:%d-%s:%d", r.HostIP, r.HostPort, r.GuestIP, r.GuestPort)}, nil
 }

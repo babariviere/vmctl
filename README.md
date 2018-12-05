@@ -25,9 +25,8 @@ cpu:
 # Net configuration
 net:
     redir:
-        - protocol: tcp
-          host: 1234
-          guest: 22
+        - host_port: 1234
+          guest_port: 22
 # Ram configuration
 memory: 10G
 # VGA configuration
