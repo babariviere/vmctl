@@ -13,3 +13,4 @@ cpu:
   arch: Haswell # default to host
 memory: 10G
 vga: std
+kvm: true

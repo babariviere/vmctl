@@ -22,6 +22,12 @@ drives:
 cpu:
   count: 2
   arch: Haswell
+# Net configuration
+net:
+    redir:
+        - protocol: tcp
+          host: 1234
+          guest: 22
 # Ram configuration
 memory: 10G
 # VGA configuration

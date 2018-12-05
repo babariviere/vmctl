@@ -13,11 +13,13 @@ type VM struct {
 	// Drives used by the vm
 	Drives []Drive `yaml:"drives"`
 	// CPU configuration
-	CPU CPU `yaml:"cpu"`
+	CPU `yaml:"cpu"`
 	// Memory used by the vm
-	Memory Memory `yaml:"memory"`
+	Memory `yaml:"memory"`
 	// VGA graphics of the vm
-	VGA VGA `yaml:"vga"`
+	VGA `yaml:"vga"`
+	// Net is net interfaces and redirections
+	Net `yaml:"net"`
 	// Kvm specify if we enable kvm or not
 	Kvm bool `yaml:"kvm"`
 }
@@ -67,6 +69,7 @@ func (v VM) ToQemu() ([]string, error) {
 	builder.add(v.CPU)
 	builder.add(v.Memory)
 	builder.add(v.VGA)
+	builder.add(v.Net)
 
 	if v.Kvm {
 		builder.addString("--enable-kvm")
