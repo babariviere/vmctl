@@ -12,23 +12,23 @@ const (
 	// Raw format is a plain binary image of the disc image, and is very portable. On filesystems that support sparse files, images in this format only use the space actually used by the data recorded in them.
 	Raw DriveType = "raw"
 	// CLoop format, mainly used for reading Knoppix and similar live CD image formats
-	CLoop = "cloop"
+	CLoop DriveType = "cloop"
 	// Cow format, supported for historical reasons only and not available to QEMU on Windows
-	Cow = "cow"
+	Cow DriveType = "cow"
 	// QCow format, supported for historical reasons and superseded by qcow2
-	QCow = "qcow"
+	QCow DriveType = "qcow"
 	// QCow2 format with a range of special features, including the ability to take multiple snapshots, smaller images on filesystems that don't support sparse files, optional AES encryption, and optional zlib compression
-	QCow2 = "qcow2"
+	QCow2 DriveType = "qcow2"
 	// Vmdk VMware 3 & 4, or 6 image format, for exchanging images with that product
-	Vmdk = "vmdk"
+	Vmdk DriveType = "vmdk"
 	// Vdi VirtualBox 1.1 compatible image format, for exchanging images with VirtualBox.
-	Vdi = "vdi"
+	Vdi DriveType = "vdi"
 	// Vhdx Hyper-V compatible image format, for exchanging images with Hyper-V 2012 or later.
-	Vhdx = "vhdx"
+	Vhdx DriveType = "vhdx"
 	// Vpc Hyper-V legacy image format, for exchanging images with Virtual PC / Virtual Server / Hyper-V 2008.
-	Vpc = "vpc"
+	Vpc DriveType = "vpc"
 	// Auto format, choose raw by default
-	Auto = "auto"
+	Auto DriveType = "auto"
 )
 
 // DriveInterface is the interface used by the disk
@@ -36,13 +36,13 @@ type DriveInterface string
 
 const (
 	IfIde    DriveInterface = "ide"
-	IfScsi                  = "scsi"
-	IfSd                    = "sd"
-	IfMtd                   = "mtd"
-	IfFloppy                = "floppy"
-	IfPflash                = "pflash"
-	IfVirtio                = "virtio"
-	IfNone                  = "none"
+	IfScsi   DriveInterface = "scsi"
+	IfSd     DriveInterface = "sd"
+	IfMtd    DriveInterface = "mtd"
+	IfFloppy DriveInterface = "floppy"
+	IfPflash DriveInterface = "pflash"
+	IfVirtio DriveInterface = "virtio"
+	IfNone   DriveInterface = "none"
 )
 
 // DriveMedia is the media type of the disk
@@ -52,7 +52,7 @@ const (
 	// Disk set drive as a disk
 	Disk DriveMedia = "disk"
 	// CdRom set drive as a cdrom
-	CdRom = "cdrom"
+	CdRom DriveMedia = "cdrom"
 )
 
 // DriveCache is the cache used by the disk
@@ -62,13 +62,13 @@ const (
 	// CacheNone disables cache
 	CacheNone DriveCache = "none"
 	// CacheWriteback enables writeback
-	CacheWriteback = "writeback"
+	CacheWriteback DriveCache = "writeback"
 	// CacheUnsafe enables writeback and no flush
-	CacheUnsafe = "unsafe"
+	CacheUnsafe DriveCache = "unsafe"
 	// CacheDirectSync enables direct sync
-	CacheDirectSync = "directsync"
+	CacheDirectSync DriveCache = "directsync"
 	// CacheWriteThrough disables direct sync
-	CacheWriteThrough = "writethrough"
+	CacheWriteThrough DriveCache = "writethrough"
 )
 
 // TODO: implement unmarshal to check for invalid values
@@ -122,6 +122,10 @@ func (d Drive) ToQemu() ([]string, error) {
 	}
 	if len(d.Cache) == 0 {
 		d.Cache = CacheWriteback
+	}
+
+	if d.Media == CdRom {
+		return []string{"-cdrom", d.Path}, nil
 	}
 
 	var res []string

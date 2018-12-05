@@ -26,6 +26,8 @@ cpu:
 memory: 10G
 # VGA configuration
 vga: std
+# Enable KVM
+kvm: true
 ```
 
 All options can be found in the manual of qemu.
