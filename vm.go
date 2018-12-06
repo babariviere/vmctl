@@ -22,6 +22,8 @@ type VM struct {
 	Net `yaml:"net"`
 	// Kvm specify if we enable kvm or not
 	Kvm bool `yaml:"kvm"`
+	// Snapshot enables temporary snapshot
+	Snapshot bool `yaml:"snapshot"`
 }
 
 type errBuilder struct {
@@ -72,7 +74,10 @@ func (v VM) ToQemu() ([]string, error) {
 	builder.add(v.Net)
 
 	if v.Kvm {
-		builder.addString("--enable-kvm")
+		builder.addString("-enable-kvm")
+	}
+	if v.Snapshot {
+		builder.addString("-snapshot")
 	}
 
 	return builder.buf, builder.err

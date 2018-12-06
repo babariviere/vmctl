@@ -33,6 +33,8 @@ memory: 10G
 vga: std
 # Enable KVM
 kvm: true
+# Enable temporary snapshot
+snapshot: true
 ```
 
 All options can be found in the manual of qemu.

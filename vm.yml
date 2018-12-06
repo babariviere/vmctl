@@ -14,3 +14,4 @@ cpu:
 memory: 10G
 vga: std
 kvm: true
+snapshot: true
