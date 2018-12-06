@@ -7,10 +7,14 @@ import (
 
 // Net is all net related stuff in VM
 type Net struct {
+	Enable    bool       `yaml:"enable"`
 	Redirects []Redirect `yaml:"redir"`
 }
 
 func (n Net) ToQemu() (args []string, err error) {
+	if n.Enable {
+		args = append(args, "-net", "nic")
+	}
 	for _, r := range n.Redirects {
 		res, rerr := r.ToQemu()
 		if rerr != nil {
